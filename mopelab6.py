@@ -1,5 +1,6 @@
 import random, math, numpy
 import scipy.stats
+import time
 x1_min,x1_max,x2_min,x2_max,x3_min,x3_max,l=10,40,15,50,10,30,1.73 #306
 x01 = (x1_max + x1_min) / 2
 xl1 = l * (x1_max - x01) + x01
@@ -186,6 +187,7 @@ def func(num):
     for i in range(len(Xf)):
         print(round(sum([cmb(xnat[i])[j] * b_arr[j] for j in range(11)]), 2), "==", Ys[i])
     print("Результат збігається з середніми значеннями")
+    start_time1=time.time()
     print("Критерій Кохрена")
     D = []
     Summa = 0
@@ -210,11 +212,14 @@ def func(num):
     if Gp <= crit:
         print("Дисперсія однорідна")
         print(Gp, "<=", crit)
+        print("Час обробки провірки критерію Кохрена --- %s секунд --- " % (time.time() - start_time1))
     else:
         print("Дисперсія не однорідна")
         m += 1
         print("M:", m)
+        print("Час обробки провірки критерію Кохрена --- %s секунд --- " % (time.time() - start_time1))
         return func(m)
+    start_time2 = time.time()
     print("Критерій Стьюдента")
     S2_b = sum(D) / N
     S2_betta = S2_b / (N * m)
@@ -256,6 +261,8 @@ def func(num):
     for i in range(len(Ys)):
         print(round(sum([cmb(xnat[i])[j] * b_arr[j] for j in range(11)]), 2), "==", Ys[i])
     print("Нуль гіпотеза виконується")
+    print("Час обробки провірки критерію Стьюдента --- %s секунд --- " % (time.time() - start_time2))
+    start_time3 = time.time()
     print("Критерій Фішера")
     d = 0
     for i in range(len(b_arr)):
@@ -279,9 +286,15 @@ def func(num):
         if (Fp < Ft):
             print("Рівняння регресії адекватно оригіналу при рівні значимості 0.05")
             print("Значення критерію=", Ft)
+            print("Час обробки провірки критерію Фішера --- %s секунд --- " % (time.time() - start_time3))
+
             break
         else:
             print("Рівняння регресії неадекватно оригіналу при рівні значимості 0.05")
             print("Значення критерію=", Ft)
+            print("Час обробки провірки критерію Фішера --- %s секунд --- " % (time.time() - start_time3))
+
             return (func(2))
+start_time = time.time()
 func(2)
+print("Час роботи всієї програми --- %s секунд --- " % (time.time() - start_time))
